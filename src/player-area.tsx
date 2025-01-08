@@ -30,6 +30,7 @@ import { playerArea_PlayerMap_ActiveMapQuery } from "./__generated__/playerArea_
 import { playerArea_MapPingMutation } from "./__generated__/playerArea_MapPingMutation.graphql";
 import { UpdateTokenContext } from "./update-token-context";
 import { LazyLoadedMapView } from "./lazy-loaded-map-view";
+import { ExcalidrawComponent } from "./ExcalidrawComponent";
 
 const ToolbarContainer = styled(animated.div)`
   position: absolute;
@@ -92,6 +93,8 @@ const PlayerMap = ({
 
   const controlRef = React.useRef<MapControlInterface | null>(null);
   const [markedAreas, setMarkedAreas] = React.useState<MarkedArea[]>(() => []);
+
+  const [showWhiteboard, setShowWhiteboard] = React.useState(false);
 
   React.useEffect(() => {
     const contextmenuListener = (ev: Event) => {
@@ -249,6 +252,11 @@ const PlayerMap = ({
           ) : null}
         </FlatContextProvider>
       </div>
+
+      {showWhiteboard && (
+        <ExcalidrawComponent onClose={() => setShowWhiteboard(false)} />
+      )}
+
       {!showSplashScreen ? (
         isMapOnly ? null : (
           <>
@@ -314,18 +322,14 @@ const PlayerMap = ({
                         </Toolbar.LongPressButton>
                       </Toolbar.Item>
                       <Toolbar.Item isActive>
-                        <Toolbar.LongPressButton
+                        <Toolbar.Button
                           onClick={() => {
-                            noteWindowActions.showNoteInWindow(
-                              null,
-                              "note-editor",
-                              true
-                            );
+                            setShowWhiteboard(true);
                           }}
                         >
-                          <Icon.BookOpen boxSize="20px" />
-                          <Icon.Label>Notes</Icon.Label>
-                        </Toolbar.LongPressButton>
+                          <Icon.Edit boxSize="20px" />
+                          <Icon.Label>Whiteboard</Icon.Label>
+                        </Toolbar.Button>
                       </Toolbar.Item>
                     </Toolbar.Group>
                   </React.Fragment>
